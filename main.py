@@ -1,7 +1,16 @@
 import streamlit as st
 import boto3
 from botocore.exceptions import ClientError
-from Functions.read_functions import lire_docx,lire_pdf,lire_ppt
+from Functions_.retrieve_content import retrieve_content_file_uploaded
+
+#declaration of variables
+file_content = ""
+if "checkFormattingButton"  not in st.session_state:
+    st.session_state['checkFormattingButton']=False
+
+if "summary" not in st.session_state:
+    st.session_state['summary']=""
+
 
 st.markdown(
     """
@@ -13,32 +22,15 @@ st.markdown(
     """, 
     unsafe_allow_html=True
 )
-
 st.markdown("<h1 style='text-align: center; color: #4CAF50;'>📄 Uploader et Afficher le Contenu de votre Fichier</h1>", unsafe_allow_html=True)
-
 st.markdown("---")
 st.markdown("<h4 style='text-align: center;'>Sélectionnez un fichier pour afficher son contenu</h4>", unsafe_allow_html=True)
 
-fichier_telecharge = st.file_uploader("", type=["pdf", "docx", "pptx"])
+file_uploaded = st.file_uploader("Televerser votre fichier ", type=["pdf", "docx", "pptx"])
 
-file_content = ""
 
-if fichier_telecharge is not None:
-    extension_fichier = fichier_telecharge.name.split('.')[-1].lower()
 
-    if extension_fichier in ["pdf", "docx", "pptx"]:
-        st.markdown("---")
-                
-        if extension_fichier == "pdf":
-            file_content = lire_pdf(fichier_telecharge)
-        elif extension_fichier == "docx":
-            file_content = lire_docx(fichier_telecharge)
-        elif extension_fichier == "pptx":
-            file_content = lire_ppt(fichier_telecharge)
-            
-    else:
-        st.markdown("---")
-        st.error("⚠️ Seuls les fichiers PDF, DOCX, et PPTX sont acceptés.")
+file_content=retrieve_content_file_uploaded(file_uploaded)
 
 
 minimum = st.slider(label="Minimum length of the summary", min_value=10, max_value=514)
@@ -50,7 +42,7 @@ if st.button("Afficher le resumé :"):
     # Initialize Amazon Bedrock client
     client = boto3.client("bedrock-runtime", region_name="us-east-1")
     model_id = "amazon.titan-text-premier-v1:0"
-
+    
     # Construct the conversation
     user_message = f"""Below provided are some notes. Read through the notes, understand key take aways and summarize the meeting notes. 
     Follow below instructions when responding:
@@ -59,7 +51,7 @@ if st.button("Afficher le resumé :"):
     - You MUST Keep the response beetwen {minimum} and {maximum} words. 
     - DO NOT make up or hallucinate any other information apart from the information given below. 
     -You MUST give the response in french
-    -Lorsque vous répondrez, donnez à la fin le nombre de mots du  résumé que tu as produit
+    -Mention the number of words that contains the summary you provide
 
     Notes:{file_content}
 
@@ -71,7 +63,7 @@ if st.button("Afficher le resumé :"):
             "content": [{"text": user_message}],
         }
     ]
-    
+     
     try:
         # Send the message to the model, using a basic inference configuration(real-time inference)
         response = client.converse(
@@ -82,15 +74,23 @@ if st.button("Afficher le resumé :"):
         )
 
         # Extract and print the response text.
-        response_text = response["output"]["message"]["content"][0]["text"]
-        st.write(response_text)
-
+        st.session_state['summary'] = response["output"]["message"]["content"][0]["text"]
+        st.session_state['checkFormattingButton']=True
+  
     except (ClientError, Exception) as e:
         print(f"ERROR: Can't invoke '{model_id}'. Reason: {e}")
         exit(1)
+        
+          
+#Display the summary
+st.write(st.session_state['summary'])
 
 
-
-
+#Handle the click button 
+if st.session_state['checkFormattingButton'] is True:
+    if st.button('Formatting'):
+        #Code to implement when the user clicks on the Formatting button.
+        print('To be continued')
+        
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: grey;'>Made by Ezekiel</p>", unsafe_allow_html=True)

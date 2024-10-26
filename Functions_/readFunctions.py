@@ -3,7 +3,6 @@ import docx
 from pptx import Presentation
 
 
-
 def lire_pdf(fichier):
     lecteur_pdf = PdfReader(fichier)
     texte = ""
