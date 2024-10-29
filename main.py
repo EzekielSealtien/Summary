@@ -53,8 +53,11 @@ st.markdown("<h4 style='text-align: center;'>Sélectionnez un fichier pour affic
 file_uploaded = st.file_uploader("Téléverser votre fichier ", type=["pdf", "docx", "pptx"])
 
 # Text to summarize
-file_content = retrieve_content_file_uploaded(file_uploaded)
-
+if file_uploaded is not None:
+    if file_uploaded.size > 500 * 1024:
+        st.error("Le fichier dépasse la limite de 0.5MB. Veuillez téléverser un fichier plus petit.")
+    else:
+        file_content = retrieve_content_file_uploaded(file_uploaded)
 
 # Dropdown list (selectbox) pour choisir le modèle
 model_choice=""
@@ -62,7 +65,7 @@ with st.sidebar:
     st.header("Modèle AI")
     model_choice = st.selectbox(
         "Choisissez un modèle :",
-        ("gpt-4o", "gpt-4", "gpt-3.5-turbo","gpt-3.5","gpt-3")
+        ("gpt-4", "gpt-3.5-turbo","gpt-3.5","gpt-3")
     )
 
 
@@ -89,9 +92,6 @@ if st.session_state['checkFormattingButton'] is True:
     
 # Display the summary
 st.markdown(st.session_state['response_model'], unsafe_allow_html=True)
-
-
-
 
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: grey;'>Made by RAD team</p>", unsafe_allow_html=True)
