@@ -18,7 +18,7 @@ def responseModel(text, instructions,parameters):
 
     Formatting Instructions:
     - Apply the specified formatting by framing only the requested text with HTML tags, without altering the overall content.
-    - Use basic HTML/CSS tags, like `<b>`, `<i>`, `<u>`, and `<span style="color: red;">text</span>`, as needed.
+    - Use basic HTML/CSS tags, like `<b>`, `<i>`, `<u>``, as needed.
     - Use non-breaking spaces (`&nbsp;`) to control spacing when specified.
     - Only apply formatting instructions, and do not output raw HTML code unless specified.
 

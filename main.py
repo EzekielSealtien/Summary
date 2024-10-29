@@ -3,6 +3,8 @@ import openai
 from langchain_core.messages import AIMessage, HumanMessage
 from Functions_.retrieve_content import retrieve_content_file_uploaded
 from Functions_.response import responseModel,responseModelInitial
+from streamlit_quill import st_quill as stq
+
 
 
 # Load API key
@@ -53,6 +55,7 @@ file_uploaded = st.file_uploader("Téléverser votre fichier ", type=["pdf", "do
 # Text to summarize
 file_content = retrieve_content_file_uploaded(file_uploaded)
 
+
 # Dropdown list (selectbox) pour choisir le modèle
 model_choice=""
 with st.sidebar:
@@ -75,14 +78,19 @@ if st.button("Afficher le résumé :"):
 
 
 
+
 # Handle the formatting button
 if st.session_state['checkFormattingButton'] is True:
     instructions = st.text_area(label='Enter your instructions:')
     if st.button('Formatting'):
         st.session_state['response_model'] = responseModel(st.session_state['response_model'], instructions,parameters)
-
+    if st.button("Passer a la version word"):
+        stq(value=st.session_state['response_model'], placeholder="Type here")
+    
 # Display the summary
-st.write(st.session_state['response_model'], unsafe_allow_html=True)
+st.markdown(st.session_state['response_model'], unsafe_allow_html=True)
+
+
 
 
 st.markdown("---")
