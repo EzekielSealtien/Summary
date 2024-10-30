@@ -14,20 +14,23 @@ def responseModel(text, instructions,parameters):
 
         # Construct the user query with limited history
     user_query = f"""
-    Please format the following text according to the provided instructions using HTML tags and inline CSS where necessary. 
+    Please process the following text according to the provided instructions. The model should be capable of both formatting and executing any additional tasks described in the instructions. Use HTML tags and inline CSS where necessary to apply formatting.
 
-    Formatting Instructions:
-    - Apply the specified formatting by framing only the requested text with HTML tags, without altering the overall content.
-    - Use basic HTML/CSS tags, like `<b>`, `<i>`, `<u>``, as needed.
-    - Use non-breaking spaces (`&nbsp;`) to control spacing when specified.
-    - Only apply formatting instructions, and do not output raw HTML code unless specified.
+    Instructions:
+    - Review the instructions provided below to understand what actions are required. These actions may include formatting (e.g., bold, italic, underline) as well as other operations like adding or modifying text elements.
+    - For formatting, use only the requested HTML tags (e.g., `<b>`, `<i>`, `<u>`, `<div style="...">`) to frame specific portions of the text without changing the content itself.
+    - If spacing adjustments are needed, use non-breaking spaces (`&nbsp;`) as specified.
+    - Execute all instructions as specified in the additional instructions below, which may include adding, modifying, or reordering text.
+    - Only apply instructions given; do not generate or alter content outside of these specifications.
+    - Return the text formatted with HTML/CSS tags as instructed.
 
     Additional Instructions:
     {instructions}
 
-    Here is the text to format:
+    Here is the text to process:
     {text}
     """
+
 
     try:
         response = openai.ChatCompletion.create(

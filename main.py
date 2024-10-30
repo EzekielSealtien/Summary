@@ -1,22 +1,19 @@
 import streamlit as st
 import openai
-from langchain_core.messages import AIMessage, HumanMessage
 from Functions_.retrieve_content import retrieve_content_file_uploaded
 from Functions_.response import responseModel,responseModelInitial
 from streamlit_quill import st_quill as stq
 
 
 # Declaration of variables
-file_content = ""
+if "file_content" not in st.session_state:
+    st.session_state.file_content = ""
 if "checkFormattingButton" not in st.session_state:
     st.session_state['checkFormattingButton'] = False
 
 if "response_model" not in st.session_state:
     st.session_state['response_model'] = ""
-if "history" not in st.session_state:
-    st.session_state.history = [
-        AIMessage(content=""),
-    ]
+
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
@@ -41,14 +38,14 @@ file_uploaded = st.file_uploader("Téléverser votre fichier(Votre fichier ne do
 st.write("Ou saisissez votre texte:")
 
 
-file_content=stq(value=st.session_state['response_model'], placeholder="Type here")
+st.session_state.file_content=stq(value=st.session_state['response_model'], placeholder="Type here")
 
 # Text to summarize
 if file_uploaded is not None:
     if file_uploaded.size > 2*500 * 1024:
         st.error("Le fichier dépasse la limite de . Veuillez téléverser un fichier plus petit.")
     else:
-        file_content = retrieve_content_file_uploaded(file_uploaded)
+        st.session_state.file_content = retrieve_content_file_uploaded(file_uploaded)
 
 # Dropdown list (selectbox) pour choisir le modèle
 model_choice=""
@@ -67,7 +64,7 @@ summaryLevel = st.radio(
 )
 parameters=[model_choice,summaryLevel]
 if st.button("Afficher le résumé :"):
-    st.session_state['response_model'] = responseModelInitial(file_content,parameters)
+    st.session_state['response_model'] = responseModelInitial(st.session_state.file_content,parameters)
     st.session_state['checkFormattingButton'] = True
 
 # Handle the formatting button
