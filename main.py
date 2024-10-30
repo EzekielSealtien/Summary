@@ -6,19 +6,6 @@ from Functions_.response import responseModel,responseModelInitial
 from streamlit_quill import st_quill as stq
 
 
-
-# Load API key
-path = "Functions_/folderM/o"
-try:
-    with open(path, mode="r") as file:
-        key = file.read()
-except FileNotFoundError:
-    print("File not found at the specified path.")
-except Exception as e:
-    print(f"An error occurred: {e}")
-
-openai.api_key = key
-
 # Declaration of variables
 file_content = ""
 if "checkFormattingButton" not in st.session_state:
@@ -50,12 +37,16 @@ st.markdown("<h1 style='text-align: center; color: #4CAF50;'>📄 Uploader et Af
 st.markdown("---")
 st.markdown("<h4 style='text-align: center;'>Sélectionnez un fichier pour afficher son contenu</h4>", unsafe_allow_html=True)
 
-file_uploaded = st.file_uploader("Téléverser votre fichier ", type=["pdf", "docx", "pptx"])
+file_uploaded = st.file_uploader("Téléverser votre fichier(Votre fichier ne doit pas depasser 1Mb) ", type=["pdf", "docx", "pptx"])
+st.write("Ou saisissez votre texte:")
+
+
+file_content=stq(value=st.session_state['response_model'], placeholder="Type here")
 
 # Text to summarize
 if file_uploaded is not None:
-    if file_uploaded.size > 500 * 1024:
-        st.error("Le fichier dépasse la limite de 0.5MB. Veuillez téléverser un fichier plus petit.")
+    if file_uploaded.size > 2*500 * 1024:
+        st.error("Le fichier dépasse la limite de . Veuillez téléverser un fichier plus petit.")
     else:
         file_content = retrieve_content_file_uploaded(file_uploaded)
 
@@ -79,19 +70,16 @@ if st.button("Afficher le résumé :"):
     st.session_state['response_model'] = responseModelInitial(file_content,parameters)
     st.session_state['checkFormattingButton'] = True
 
-
-
-
 # Handle the formatting button
 if st.session_state['checkFormattingButton'] is True:
     instructions = st.text_area(label='Enter your instructions:')
     if st.button('Formatting'):
         st.session_state['response_model'] = responseModel(st.session_state['response_model'], instructions,parameters)
-    if st.button("Passer a la version word"):
-        stq(value=st.session_state['response_model'], placeholder="Type here")
+
     
 # Display the summary
 st.markdown(st.session_state['response_model'], unsafe_allow_html=True)
+
 
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: grey;'>Made by RAD team</p>", unsafe_allow_html=True)

@@ -5,7 +5,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 def responseModel(text, instructions,parameters):
 
-    openai.api_key = "sk-GJPAXciZeshLqhrHRifEcTbiotKbcUzsrlMaqx82nXT3BlbkFJRmjfcg1nfcu1rlnKvyPH9l7j9q9DYhAT9rdBBu5F0A"
+    openai.api_key = "sk-3_zrzFltApSo8iXCHxRLYKO3ut9GLU8K3unZnQjzWJT3BlbkFJXa5uDiWOeyJzt-cU7CtIk2CUS91os5aiTRBWuA0hMA"
     
     model_choice=parameters[0]
     summaryLevel=parameters[1]
@@ -52,7 +52,7 @@ def responseModel(text, instructions,parameters):
 
 def responseModelInitial(text,parameters):
 
-    openai.api_key = "sk-GJPAXciZeshLqhrHRifEcTbiotKbcUzsrlMaqx82nXT3BlbkFJRmjfcg1nfcu1rlnKvyPH9l7j9q9DYhAT9rdBBu5F0A"
+    openai.api_key = "sk-3_zrzFltApSo8iXCHxRLYKO3ut9GLU8K3unZnQjzWJT3BlbkFJXa5uDiWOeyJzt-cU7CtIk2CUS91os5aiTRBWuA0hMA"
 
     model_choice=parameters[0]
     summaryLevel=parameters[1]
