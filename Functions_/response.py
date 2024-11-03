@@ -5,7 +5,8 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 def responseModel(text, instructions,parameters):
 
-    openai.api_key = "sk-3_zrzFltApSo8iXCHxRLYKO3ut9GLU8K3unZnQjzWJT3BlbkFJXa5uDiWOeyJzt-cU7CtIk2CUS91os5aiTRBWuA0hMA"
+    secure_path_key=".openaikeys/key.docx"
+    openai.api_key =secure_path_key
     
     model_choice=parameters[0]
     summaryLevel=parameters[1]
@@ -20,6 +21,9 @@ def responseModel(text, instructions,parameters):
     - Review the instructions provided below to understand what actions are required. These actions may include formatting (e.g., bold, italic, underline) as well as other operations like adding or modifying text elements.
     - For formatting, use only the requested HTML tags (e.g., `<b>`, `<i>`, `<u>`, `<div style="...">`) to frame specific portions of the text without changing the content itself.
     - If spacing adjustments are needed, use non-breaking spaces (`&nbsp;`) as specified.
+    - Apply the specified formatting by framing only the requested text with HTML tags, without altering or removing any existing style properties.
+    - If changing the color of titles, use inline CSS to set the color requested  (`style="color:color requested;"`) without changing other styles like font size, font weight, or alignment.
+    - Only apply formatting instructions as stated, and avoid modifying any other existing styles.
     - Execute all instructions as specified in the additional instructions below, which may include adding, modifying, or reordering text.
     - Only apply instructions given; do not generate or alter content outside of these specifications.
     - Return the text formatted with HTML/CSS tags as instructed.
@@ -30,8 +34,6 @@ def responseModel(text, instructions,parameters):
     Here is the text to process:
     {text}
     """
-
-
     try:
         response = openai.ChatCompletion.create(
             model=model_choice,
@@ -51,8 +53,6 @@ def responseModel(text, instructions,parameters):
         a = f"ERROR: {e}"
         return a
 
-
-
 def responseModelInitial(text,parameters):
 
     openai.api_key = "sk-3_zrzFltApSo8iXCHxRLYKO3ut9GLU8K3unZnQjzWJT3BlbkFJXa5uDiWOeyJzt-cU7CtIk2CUS91os5aiTRBWuA0hMA"
@@ -60,13 +60,13 @@ def responseModelInitial(text,parameters):
     model_choice=parameters[0]
     summaryLevel=parameters[1]
     user_query = f"""
-    Below is a text that may or may not contain multiple sections with titles such as "Introduction," "Conclusion," etc. Please follow these instructions carefully when summarizing:
+    Below is a text  that may or may not contain multiple sections with titles such as "Introduction," "Conclusion," etc. Please follow these instructions carefully when summarizing:
 
     Instructions:
     - First, check if the text contains section titles (e.g., "Introduction," "Conclusion",tec) or subtitles. 
     - If titles or subtitles are present, do not modify or remove these titles. Instead, summarize the content within each section individually, keeping each summary concise.
     - If no titles or subtitles are detected, summarize the entire text as a single cohesive summary.
-    - Maintain Markdown formatting in the final output.
+    - Maintain  HTML/CSS-styled formatting in the final output.
     -Check the summary level specified:
         - If the summary level is "abrege", provide an abbreviated summary that covers only the main points in a concise manner.
         - If the summary level is "complet", provide a comprehensive summary that includes all key details from the text.
@@ -76,7 +76,7 @@ def responseModelInitial(text,parameters):
     - Only summarize the content without adding or modifying any additional information.
     - Provide the summary in French.
 
-    Here is the text to summarize:
+    Here is the text  content  to summarize:
     {text}
     """
 
