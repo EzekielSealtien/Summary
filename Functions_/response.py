@@ -55,7 +55,9 @@ def responseModel(text, instructions,parameters):
 
 def responseModelInitial(text,parameters):
 
-    openai.api_key = "sk-3_zrzFltApSo8iXCHxRLYKO3ut9GLU8K3unZnQjzWJT3BlbkFJXa5uDiWOeyJzt-cU7CtIk2CUS91os5aiTRBWuA0hMA"
+    secure_path_key=".openaikeys/key.docx"
+
+    openai.api_key = secure_path_key
 
     model_choice=parameters[0]
     summaryLevel=parameters[1]
