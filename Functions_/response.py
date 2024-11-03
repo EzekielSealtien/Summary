@@ -1,12 +1,11 @@
 import openai
 import streamlit as st
 from langchain_core.messages import AIMessage, HumanMessage
-
+from openaikeys.key import get_open_ai_key
 
 def responseModel(text, instructions,parameters):
 
-    secure_path_key=".openaikeys/key.docx"
-    openai.api_key =secure_path_key
+    openai.api_key =get_open_ai_key()
     
     model_choice=parameters[0]
     summaryLevel=parameters[1]
@@ -55,10 +54,7 @@ def responseModel(text, instructions,parameters):
 
 def responseModelInitial(text,parameters):
 
-    secure_path_key=".openaikeys/key.docx"
-
-    openai.api_key = secure_path_key
-
+    openai.api_key =get_open_ai_key()
     model_choice=parameters[0]
     summaryLevel=parameters[1]
     user_query = f"""
