@@ -1,7 +1,6 @@
 import openai
 import streamlit as st
-from langchain_core.messages import AIMessage, HumanMessage
-from openaikeys.key import get_open_ai_key
+from .openaikeys.key import get_open_ai_key
 
 def responseModel(text, instructions,parameters):
 
@@ -57,6 +56,8 @@ def responseModelInitial(text,parameters):
     openai.api_key =get_open_ai_key()
     model_choice=parameters[0]
     summaryLevel=parameters[1]
+    language=parameters[2]
+
     user_query = f"""
     Below is a text  that may or may not contain multiple sections with titles such as "Introduction," "Conclusion," etc. Please follow these instructions carefully when summarizing:
 
@@ -70,9 +71,11 @@ def responseModelInitial(text,parameters):
         - If the summary level is "complet", provide a comprehensive summary that includes all key details from the text.
         - Ensure that the summary is coherent and maintains the context of the original text.
         Summary Level: {summaryLevel}
-
+french
     - Only summarize the content without adding or modifying any additional information.
-    - Provide the summary in French.
+    
+
+    - Provide the summary in {language} .
 
     Here is the text  content  to summarize:
     {text}
